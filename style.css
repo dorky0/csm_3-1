@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e58189e1;
+    background-color: #dbdbdbe1;
 }
 
 header {
@@ -20,10 +20,10 @@ header {
     text-align: center;
     background-color: rgb(199, 244, 255);   
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(48, 51, 49, 0.2);
-    margin: 20px auto;
-    max-width: 80%;
+    margin: 25px auto;
+    max-width: 85%;
 }
 .det_list {
     text-align: left;
@@ -52,6 +52,10 @@ h1 {
 
 .resource-button:hover {
     background-color: #14128f;
+    transform: rotate(0.2deg);
+
+  -webkit-transform: rotate(0.2deg);
+ 
 }
 
 
@@ -125,3 +129,5 @@ input[type="password"] {
       bottom: 0;
       margin-top: 20%;
  }
+
+
