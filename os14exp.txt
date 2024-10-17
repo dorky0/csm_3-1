@@ -1,0 +1,88 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+struct Production {
+    char left;         // Left-hand side non-terminal
+    char right[10];    // Right-hand side production
+    int prodRear;      // Length of right-hand side
+    int fl;            // Flag for left factoring
+};
+
+Production productions[20], newProductions[20]; // Arrays to hold productions
+int b = -1; // Index for new productions
+char specialChars[10]; // Array for special characters
+char epsilon = '^'; // Epsilon character
+
+int main() {
+    int numSpecialChars, numProductions;
+
+    // Input for special characters
+    cout << "Enter the number of special characters (except non-terminals): ";
+    cin >> numSpecialChars;
+    cout << "Enter the special characters for your production: ";
+    for (int i = 0; i < numSpecialChars; i++) {
+        cin >> specialChars[i];
+    }
+
+    // Input for productions
+    cout << "Enter the number of productions: ";
+    cin >> numProductions;
+    for (int i = 0; i < numProductions; i++) {
+        cout << "Enter the " << i + 1 << " production (e.g., A -> aB): ";
+        cin >> productions[i].left;
+        cout << " -> ";
+        cin >> productions[i].right;
+        productions[i].prodRear = strlen(productions[i].right);
+        productions[i].fl = 0; // Initialize factoring flag
+    }
+
+    // Process for left factoring
+    for (int i = 0; i < numProductions; i++) {
+        for (int j = i + 1; j < numProductions; j++) {
+            if (productions[i].left == productions[j].left) {
+                char commonPrefix[10];
+                int p = -1;
+                int k = 0;
+
+                // Find common prefix
+                while (productions[i].right[k] != '\0' && productions[j].right[k] != '\0' &&
+                       productions[i].right[k] == productions[j].right[k]) {
+                    commonPrefix[++p] = productions[i].right[k];
+                    productions[i].fl = 1;
+                    productions[j].fl = 1;
+                    k++;
+                }
+                commonPrefix[++p] = '\0'; // Null-terminate the common prefix
+
+                // Create new productions
+                if (p >= 0) {
+                    // Original production with common prefix
+                    newProductions[++b].left = productions[i].left;
+                    strcpy(newProductions[b].right, commonPrefix);
+
+                    // New non-terminal for remaining productions
+                    char newNonTerminal = specialChars[b % numSpecialChars]; // Rotate through special chars
+                    newProductions[++b].left = newNonTerminal;
+
+                    // Add remaining parts for the first production
+                    strcpy(newProductions[b].right, productions[i].right + k);
+                    newProductions[b].prodRear = strlen(newProductions[b].right);
+
+                    // Add remaining parts for the second production
+                    newProductions[++b].left = newNonTerminal;
+                    strcpy(newProductions[b].right, productions[j].right + k);
+                    newProductions[b].prodRear = strlen(newProductions[b].right);
+
+                    // Print new productions
+                    cout << productions[i].left << " -> " << commonPrefix << newNonTerminal << endl;
+                    cout << newNonTerminal << " -> " << productions[i].right + k << " | " << productions[j].right + k << endl;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
